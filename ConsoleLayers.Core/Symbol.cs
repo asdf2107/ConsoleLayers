@@ -93,6 +93,20 @@ namespace ConsoleLayers.Core
             };
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Symbol symbol &&
+                   ForeColor == symbol.ForeColor &&
+                   BackColor == symbol.BackColor &&
+                   Text == symbol.Text &&
+                   Length == symbol.Length;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ForeColor, BackColor, Text, Length);
+        }
+
         public static bool operator ==(Symbol left, Symbol right)
         {
             return left.Text == right.Text && left.BackColor == right.BackColor &&

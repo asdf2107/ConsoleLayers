@@ -1,4 +1,6 @@
 ﻿using ConsoleLayers.Core.Exceptions;
+using System;
+using System.Collections.Generic;
 
 namespace ConsoleLayers.Core
 {
@@ -50,6 +52,19 @@ namespace ConsoleLayers.Core
         {
             if (!IsSingleLength)
                 throw new InvalidSymbolException("Only single-length LocatedSymbols are allowed in this context.");
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is LocatedSymbol symbol &&
+                   EqualityComparer<Symbol>.Default.Equals(Symbol, symbol.Symbol) &&
+                   GridX == symbol.GridX &&
+                   GridY == symbol.GridY;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Symbol, GridX, GridY);
         }
 
         public static bool operator ==(LocatedSymbol left, LocatedSymbol right)

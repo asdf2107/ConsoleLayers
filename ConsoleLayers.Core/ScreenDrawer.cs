@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleLayers.Core
 {
-    public static class ScreenDrawer
+    internal static class ScreenDrawer
     {
         private static readonly ConcurrentQueue<LocatedSymbol> _drawQueue = new();
         private static readonly ConcurrentDictionary<(int, int), LocatedSymbol> _symbols = new();

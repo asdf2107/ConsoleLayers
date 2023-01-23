@@ -8,78 +8,19 @@ namespace ConsoleLayers.Core
     {
         private int _gridX = 0;
         private int _gridY = 0;
-        private int _gridZ = MaxZ + 1;
+        private int _gridZ = 0;
         private int _width = Settings.Grid.Width;
         private int _height = Settings.Grid.Height;
         private bool _visible = true;
-        public int GridX { get => _gridX; set { _gridX = value; _changedLayers = true; } }
-        public int GridY { get => _gridY; set { _gridY = value; _changedLayers = true; } }
-        public int GridZ { get => _gridZ; set { _gridZ = value; _changedLayers = true; } }
-        public int Width { get => _width; set { _width = value; _changedLayers = true; } }
-        public int Height { get => _height; set { _height = value; _changedLayers = true; } }
-        public bool Visible { get => _visible; set { _visible = value; _changedLayers = true; } }
-
-        #region Static
-
-        private static bool _changedLayers = false;
-        private static readonly List<Layer> _layers = new();
-        private static readonly int[,] _zMap = new int[Settings.Grid.Width, Settings.Grid.Height];
-        public static int MaxZ => _layers.Any() ? _layers.Max(l => l.GridZ) : -1;
-
-        public static void RenderAll()
-        {
-            if (_changedLayers)
-                RegenerateZMap();
-
-            var locatedSymbols = new List<LocatedSymbol>();
-
-            foreach (var layer in _layers)
-            {
-                locatedSymbols.AddRange(layer.GetRenderSymbols());
-            }
-
-            //locatedSymbols.Sort((l, r) => GetSymbolPositionNum(l) > GetSymbolPositionNum(r) ? 1 : -1); //buggy
-
-            //static int GetSymbolPositionNum(LocatedSymbol locatedSymbol) =>
-            //    locatedSymbol.GridY * Settings.Grid.Width + locatedSymbol.GridX;
-
-            ScreenDrawer.Draw(locatedSymbols);
-        }
-
-        private static void RegenerateZMap()
-        {
-            Array.Clear(_zMap);
-
-            foreach (var layer in _layers
-                .Where(l => l.Visible)
-                .OrderBy(l => l.GridZ))
-            {
-                if (_layers.Count(l => l.GridZ == layer.GridZ) > 1)
-                    throw new InvalidOperationException("Multiple identical GridZ values.");
-
-                for (int j = layer.GridY; j < layer.GridY + layer.Height; j++)
-                {
-                    for (int i = layer.GridX; i < layer.GridX + layer.Width; i++)
-                    {
-                        _zMap[i, j] = layer.GridZ;
-                    }
-                }
-            }
-
-            _changedLayers = false;
-        }
-
-        private static void AddLayer(Layer layer)
-        {
-            _layers.Add(layer);
-            _changedLayers = true;
-        }
-
-        #endregion
+        public int GridX { get => _gridX; set { _gridX = value; Layers.SetChanged(); } }
+        public int GridY { get => _gridY; set { _gridY = value; Layers.SetChanged(); } }
+        public int GridZ { get => _gridZ; set { _gridZ = value; Layers.SetChanged(); } }
+        public int Width { get => _width; set { _width = value; Layers.SetChanged(); } }
+        public int Height { get => _height; set { _height = value; Layers.SetChanged(); } }
+        public bool Visible { get => _visible; set { _visible = value; Layers.SetChanged(); } }
 
         public Layer()
         {
-            AddLayer(this);
         }
 
         public Layer(int gridX, int gridY, int width, int height)
@@ -88,8 +29,6 @@ namespace ConsoleLayers.Core
             GridY = gridY;
             Width = width;
             Height = height;
-
-            AddLayer(this);
         }
 
         public Layer(int gridX, int gridY, int gridZ, int width, int height)
@@ -99,19 +38,17 @@ namespace ConsoleLayers.Core
             GridZ = gridZ;
             Width = width;
             Height = height;
-
-            AddLayer(this);
         }
 
         public void Render()
         {
-            if (_changedLayers)
-                RegenerateZMap();
+            if (Layers.Changed)
+                Layers.RegenerateZMap();
 
             ScreenDrawer.Draw(GetRenderSymbols());
         }
 
-        private List<LocatedSymbol> GetRenderSymbols()
+        internal List<LocatedSymbol> GetRenderSymbols()
         {
             var locatedSymbols = new List<LocatedSymbol>();
 
@@ -121,7 +58,7 @@ namespace ConsoleLayers.Core
 
                 for (int i = 0; i < Width; i++)
                 {
-                    if (_zMap[GridX + i, GridY + j] == GridZ)
+                    if (Layers.ZMap[GridX + i, GridY + j] == GridZ)
                     {
                         lineSymbols.Add(GetLocatedSymbolAt(i, j));
                     }

@@ -4,7 +4,7 @@ using ConsoleLayers.Example.Layers;
 Console.CursorVisible = false;
 //Settings.Optimization = Optimization.DoNotMerge;
 
-var drawLoopTask = ScreenDrawer.StartDrawLoop();
+var drawLoopTask = Layers.StartLoop();
 
 var bg = new BackgroundLayer();
 
@@ -15,7 +15,8 @@ var p2 = new PopupLayer(50, 6, 35, 15)
     BackColor = ConsoleColor.Blue,
 };
 
-Layer.RenderAll();
+Layers.Add(bg, p1, p2);
+Layers.RenderAll();
 
 await Task.Delay(1000);
 
@@ -25,18 +26,21 @@ var p3 = new PopupLayer(10, 10, 42, 12)
     BackColor = ConsoleColor.Green,
 };
 
-Layer.RenderAll();
+Layers.Add(p3);
+Layers.RenderAll();
 
 await Task.Delay(1000);
 
 p3.Visible = false;
 
-Layer.RenderAll();
+Layers.RenderAll();
 
 var p4 = new PopupLayer(0, 0, 10, 5)
 {
     BackColor = ConsoleColor.DarkRed,
 };
+
+Layers.Add(p4);
 
 for (int i = 0; i < 24; i++)
 {
@@ -47,8 +51,7 @@ for (int i = 0; i < 24; i++)
         p4.BackColor = ConsoleColor.Red;
     else
         p4.BackColor = ConsoleColor.Cyan;
-
-    Layer.RenderAll();
+    Layers.RenderAll();
 
     await Task.Delay(50);
 }
