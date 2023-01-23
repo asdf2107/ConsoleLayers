@@ -89,9 +89,9 @@ namespace ConsoleLayers.Core
                 if (_layers.Count(l => l.GridZ == layer.GridZ) > 1)
                     throw new InvalidOperationException("Multiple identical GridZ values.");
 
-                for (int j = layer.GridY; j < layer.GridY + layer.Height; j++)
+                for (int j = ClampVertical(layer.GridY); j < ClampVertical(layer.GridY + layer.Height); j++)
                 {
-                    for (int i = layer.GridX; i < layer.GridX + layer.Width; i++)
+                    for (int i = ClampHorizontal(layer.GridX); i < ClampHorizontal(layer.GridX + layer.Width); i++)
                     {
                         ZMap[i, j] = layer.GridZ;
                     }
@@ -99,6 +99,20 @@ namespace ConsoleLayers.Core
             }
 
             Changed = false;
+        }
+
+        public static int ClampHorizontal(int x)
+        {
+            if (x < 0) return 0;
+            if (x > Settings.Grid.Width) return Settings.Grid.Width;
+            return x;
+        }
+
+        public static int ClampVertical(int y)
+        {
+            if (y < 0) return 0;
+            if (y > Settings.Grid.Height) return Settings.Grid.Height;
+            return y;
         }
     }
 }

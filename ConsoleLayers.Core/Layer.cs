@@ -41,11 +41,11 @@ namespace ConsoleLayers.Core
         {
             var locatedSymbols = new List<LocatedSymbol>();
 
-            for (int j = 0; j < Height; j++)
+            for (int j = Layers.ClampVertical(-GridY); j < Height - Layers.ClampVertical(-Settings.Grid.Height + GridY + Height); j++)
             {
                 var lineSymbols = new List<LocatedSymbol>();
 
-                for (int i = 0; i < Width; i++)
+                for (int i = Layers.ClampHorizontal(-GridX); i < Width - Layers.ClampHorizontal(-Settings.Grid.Width + GridX + Width); i++)
                 {
                     if (Layers.ZMap[GridX + i, GridY + j] == GridZ)
                     {

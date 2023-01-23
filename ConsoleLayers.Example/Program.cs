@@ -37,14 +37,14 @@ layer3.Visible = false;
 
 Layers.RenderAll();
 
-var layer4 = new FrameLayer(0, 0, 10, 5)
+var layer4 = new FrameLayer(-4, -4, 10, 5)
 {
     BackColor = ConsoleColor.DarkRed,
 };
 
 Layers.Add(layer4);
 
-for (int i = 0; i < 24; i++)
+for (int i = 0; i < 32; i++)
 {
     layer4.GridX++;
     layer4.GridY++;
