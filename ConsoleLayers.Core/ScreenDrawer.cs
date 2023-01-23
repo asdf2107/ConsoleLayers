@@ -39,7 +39,7 @@ namespace ConsoleLayers.Core
             {
                 if (!_drawQueue.IsEmpty)
                 {
-                    lock (_drawQueue)
+                    lock(_drawQueue)
                     {
                         bool success = _drawQueue.TryDequeue(out LocatedSymbol first);
                         if (!success)

@@ -2,6 +2,7 @@
 using ConsoleLayers.Example.Layers;
 
 Console.CursorVisible = false;
+//Settings.Optimization = Optimization.DoNotMerge;
 
 var drawLoopTask = ScreenDrawer.StartDrawLoop();
 
