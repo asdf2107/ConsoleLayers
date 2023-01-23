@@ -38,10 +38,15 @@ var p4 = new PopupLayer(0, 0, 10, 5)
     BackColor = ConsoleColor.DarkRed,
 };
 
-for (int i = 0; i < 20; i++)
+for (int i = 0; i < 24; i++)
 {
     p4.GridX++;
     p4.GridY++;
+
+    if (i / 8 % 2 == 0)
+        p4.BackColor = ConsoleColor.Red;
+    else
+        p4.BackColor = ConsoleColor.Cyan;
 
     Layer.RenderAll();
 
