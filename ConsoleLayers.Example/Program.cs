@@ -1,4 +1,5 @@
 ﻿using ConsoleLayers.Core;
+using ConsoleLayers.Core.ConcreteLayers;
 using ConsoleLayers.Example.Layers;
 
 Console.CursorVisible = false;
@@ -6,51 +7,52 @@ Console.CursorVisible = false;
 
 var drawLoopTask = Layers.StartLoop();
 
-var bg = new BackgroundLayer();
+var backgroundLayer = new BackgroundLayer();
 
-var p1 = new PopupLayer(2, 4, 20, 10);
+var layer1 = new FrameLayer(2, 4, 20, 10);
 
-var p2 = new PopupLayer(50, 6, 35, 15)
+var layer2 = new FrameLayer(50, 6, 35, 15)
 {
     BackColor = ConsoleColor.Blue,
+    Palette = FramePalettes.DoubleLine,
 };
 
-Layers.Add(bg, p1, p2);
+Layers.Add(backgroundLayer, layer1, layer2);
 Layers.RenderAll();
 
 await Task.Delay(1000);
 
-var p3 = new PopupLayer(10, 10, 42, 12)
+var layer3 = new FrameLayer(10, 10, 42, 12)
 {
     ForeColor = ConsoleColor.Black,
     BackColor = ConsoleColor.Green,
 };
 
-Layers.Add(p3);
+Layers.Add(layer3);
 Layers.RenderAll();
 
 await Task.Delay(1000);
 
-p3.Visible = false;
+layer3.Visible = false;
 
 Layers.RenderAll();
 
-var p4 = new PopupLayer(0, 0, 10, 5)
+var layer4 = new FrameLayer(0, 0, 10, 5)
 {
     BackColor = ConsoleColor.DarkRed,
 };
 
-Layers.Add(p4);
+Layers.Add(layer4);
 
 for (int i = 0; i < 24; i++)
 {
-    p4.GridX++;
-    p4.GridY++;
+    layer4.GridX++;
+    layer4.GridY++;
 
     if (i / 8 % 2 == 0)
-        p4.BackColor = ConsoleColor.Red;
+        layer4.BackColor = ConsoleColor.Red;
     else
-        p4.BackColor = ConsoleColor.Cyan;
+        layer4.BackColor = ConsoleColor.Cyan;
     Layers.RenderAll();
 
     await Task.Delay(50);

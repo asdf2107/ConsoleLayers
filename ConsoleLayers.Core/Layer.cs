@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace ConsoleLayers.Core
 {
@@ -27,15 +25,6 @@ namespace ConsoleLayers.Core
         {
             GridX = gridX;
             GridY = gridY;
-            Width = width;
-            Height = height;
-        }
-
-        public Layer(int gridX, int gridY, int gridZ, int width, int height)
-        {
-            GridX = gridX;
-            GridY = gridY;
-            GridZ = gridZ;
             Width = width;
             Height = height;
         }

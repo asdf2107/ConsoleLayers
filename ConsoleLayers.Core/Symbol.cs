@@ -9,6 +9,7 @@ namespace ConsoleLayers.Core
         public string Text { get; set; }
         public int Length { get => Text.Length; }
         public static readonly string EmptyText = " ";
+        public static readonly char EmptyChar = ' ';
 
         public static Symbol Empty => FromText(EmptyText);
 

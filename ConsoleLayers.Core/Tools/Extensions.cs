@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ConsoleLayers.Core
+namespace ConsoleLayers.Core.Tools
 {
     public static class Extensions
     {
