@@ -38,10 +38,10 @@ namespace ConsoleLayers.Core
                 locatedSymbols.AddRange(layer.GetRenderSymbols());
             }
 
-            locatedSymbols.Sort((l, r) => GetSymbolPositionNum(l) > GetSymbolPositionNum(r) ? 1 : -1);
+            //locatedSymbols.Sort((l, r) => GetSymbolPositionNum(l) > GetSymbolPositionNum(r) ? 1 : -1); //buggy
 
-            static int GetSymbolPositionNum(LocatedSymbol locatedSymbol) =>
-                locatedSymbol.GridY * Settings.Grid.Width + locatedSymbol.GridX;
+            //static int GetSymbolPositionNum(LocatedSymbol locatedSymbol) =>
+            //    locatedSymbol.GridY * Settings.Grid.Width + locatedSymbol.GridX;
 
             ScreenDrawer.Draw(locatedSymbols);
         }
