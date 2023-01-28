@@ -6,7 +6,7 @@ namespace ConsoleLayers.Example.Layers
     {
         protected override Symbol GetLayerSymbolAt(int x, int y)
         {
-            return (x) % 4 == 0 ? Symbol.FromText("X") : Symbol.Empty;
+            return (x) % 4 == 0 ? Symbol.FromText("X", ConsoleColor.DarkGray) : Symbol.Empty;
         }
     }
 }

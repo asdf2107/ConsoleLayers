@@ -1,8 +1,10 @@
 ﻿using ConsoleLayers.Core;
 using ConsoleLayers.Core.ConcreteLayers;
 using ConsoleLayers.Example.Layers;
+using System.Text;
 
 Console.CursorVisible = false;
+Console.OutputEncoding = Encoding.Unicode;
 //Settings.Optimization = Optimization.DoNotMerge;
 
 var drawLoopTask = Layers.StartLoop();
@@ -43,30 +45,39 @@ var layer4 = new Frame(-4, -4, 14, 7)
     BackColor = ConsoleColor.DarkRed,
 };
 
-Layers.Add(layer4);
+var progressLayer = new Frame(0, Settings.Grid.Height - 3, Settings.Grid.Width - 1, 3);
+var progressBar = new ProgressBar(0, 0, Settings.Grid.Width - 3)
+{
+    LeftLoadingChar = '-',
+};
+progressLayer.AddChild(progressBar);
 
-for (int i = 0; i < 32; i++)
+Layers.Add(layer4, progressLayer);
+
+for (int i = 0; i < 30; i++)
 {
     layer4.GridX++;
     layer4.GridY++;
 
-    if (i / 8 % 2 == 0)
+    if (i / 5 % 2 == 0)
         layer4.BackColor = ConsoleColor.Red;
     else
         layer4.BackColor = ConsoleColor.Cyan;
-    Layers.RenderAll();
 
-    await Task.Delay(50);
+    progressBar.Value += 0.01d;
+
+    Layers.RenderAll();
+    await Task.Delay(100);
 }
 
 await Task.Delay(1000);
 
-for (int i = 0; i < 32; i++)
+for (int i = 0; i < 70; i++)
 {
     layer1.GridX++;
+    progressBar.Value += 0.01d;
 
     Layers.RenderAll();
-
     await Task.Delay(50);
 }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ConsoleLayers.Core
@@ -23,7 +24,7 @@ namespace ConsoleLayers.Core
         public int InnerGridRight { get; set; } = 1;
         public int InnerGridTop { get; set; } = 1;
         public int InnerGridBottom { get; set; } = 1;
-        public IEnumerable<Layer> InnerGridChildren => _innerGridChildren.AsReadOnly();
+        public ReadOnlyCollection<Layer> InnerGridChildren => _innerGridChildren.AsReadOnly();
         public Layer Parent { get; private set; }
 
         public Layer()

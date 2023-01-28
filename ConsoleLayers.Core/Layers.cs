@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleLayers.Core.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -107,18 +108,8 @@ namespace ConsoleLayers.Core
             }
         }
 
-        public static int ClampHorizontal(int x)
-        {
-            if (x < 0) return 0;
-            if (x > Settings.Grid.Width) return Settings.Grid.Width;
-            return x;
-        }
+        public static int ClampHorizontal(int x) => x.Clamp(0, Settings.Grid.Width);
 
-        public static int ClampVertical(int y)
-        {
-            if (y < 0) return 0;
-            if (y > Settings.Grid.Height) return Settings.Grid.Height;
-            return y;
-        }
+        public static int ClampVertical(int y) => y.Clamp(0, Settings.Grid.Height);
     }
 }
