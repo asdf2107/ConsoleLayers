@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleLayers.Core
 {
@@ -10,12 +11,20 @@ namespace ConsoleLayers.Core
         private int _width = Settings.Grid.Width;
         private int _height = Settings.Grid.Height;
         private bool _visible = true;
-        public int GridX { get => _gridX; set { _gridX = value; Layers.SetChanged(); } }
-        public int GridY { get => _gridY; set { _gridY = value; Layers.SetChanged(); } }
-        public int GridZ { get => _gridZ; set { _gridZ = value; Layers.SetChanged(); } }
-        public int Width { get => _width; set { _width = value; Layers.SetChanged(); } }
-        public int Height { get => _height; set { _height = value; Layers.SetChanged(); } }
-        public bool Visible { get => _visible; set { _visible = value; Layers.SetChanged(); } }
+        private List<Layer> _innerGridChildren = new();
+        public int GridX { get => _gridX; set { _gridX = value; Changed = true; } }
+        public int GridY { get => _gridY; set { _gridY = value; Changed = true; } }
+        public int GridZ { get => _gridZ; set { _gridZ = value; Changed = true; } }
+        public int Width { get => _width; set { _width = value; Changed = true; } }
+        public int Height { get => _height; set { _height = value; Changed = true; } }
+        public bool Visible { get => _visible; set { _visible = value; Changed = true; } }
+        internal bool Changed { get; set; } = true;
+        public int InnerGridLeft { get; set; } = 1;
+        public int InnerGridRight { get; set; } = 1;
+        public int InnerGridTop { get; set; } = 1;
+        public int InnerGridBottom { get; set; } = 1;
+        public IEnumerable<Layer> InnerGridChildren => _innerGridChildren.AsReadOnly();
+        public Layer Parent { get; private set; }
 
         public Layer()
         {
@@ -29,9 +38,27 @@ namespace ConsoleLayers.Core
             Height = height;
         }
 
+        public void AddChild(Layer layer)
+        {
+            if (!_innerGridChildren.Contains(layer))
+            {
+                _innerGridChildren.Add(layer);
+                layer.Parent = this;
+            }
+        }
+
+        public void RemoveChild(Layer layer)
+        {
+            if (_innerGridChildren.Contains(layer))
+            {
+                _innerGridChildren.Remove(layer);
+                layer.Parent = null;
+            }
+        }
+
         public void Render()
         {
-            if (Layers.Changed)
+            if (Layers.AnyLayerChanged())
                 Layers.RegenerateZMap();
 
             ScreenDrawer.Draw(GetRenderSymbols());
@@ -47,7 +74,7 @@ namespace ConsoleLayers.Core
 
                 for (int i = Layers.ClampHorizontal(-GridX); i < Width - Layers.ClampHorizontal(-Settings.Grid.Width + GridX + Width); i++)
                 {
-                    if (Layers.ZMap[GridX + i, GridY + j] == GridZ)
+                    if (Parent != null || Layers.ZMap[GridX + i, GridY + j] == GridZ)
                     {
                         lineSymbols.Add(GetLocatedSymbolAt(i, j));
                     }
@@ -64,14 +91,6 @@ namespace ConsoleLayers.Core
             ScreenDrawer.Draw(GetLocatedSymbolAt(x, y));
         }
 
-        public void RenderFields(IEnumerable<(int, int)> coords)
-        {
-            foreach (var coord in coords)
-            {
-                RenderField(coord.Item1, coord.Item2);
-            }
-        }
-
         private LocatedSymbol GetLocatedSymbolAt(int x, int y)
         {
             return new LocatedSymbol
@@ -82,6 +101,25 @@ namespace ConsoleLayers.Core
             };
         }
 
-        protected abstract Symbol GetSymbolAt(int x, int y);
+        private Symbol GetSymbolAt(int x, int y)
+        {
+            if (_innerGridChildren.Any() &&
+                x >= InnerGridLeft && x < Width - InnerGridRight &&
+                y >= InnerGridTop && y < Height - InnerGridBottom)
+            {
+                int innerX = x - InnerGridLeft;
+                int innerY = y - InnerGridTop;
+                foreach (var childLayer in _innerGridChildren.OrderByDescending(cl => cl.GridZ))
+                {
+                    if (childLayer.GridX <= innerX && childLayer.GridY <= innerY &&
+                        childLayer.GridX + childLayer.Width > innerX && childLayer.GridY + childLayer.Height > innerY)
+                        return childLayer.GetSymbolAt(innerX, innerY);
+                }
+            }
+
+            return GetLayerSymbolAt(x, y);
+        }
+
+        protected abstract Symbol GetLayerSymbolAt(int x, int y);
     }
 }

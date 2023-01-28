@@ -9,9 +9,10 @@ var drawLoopTask = Layers.StartLoop();
 
 var backgroundLayer = new BackgroundLayer();
 
-var layer1 = new FrameLayer(2, 4, 20, 10);
+var layer1 = new Frame(2, 4, 20, 10);
+layer1.AddChild(new Frame(0, 0, 10, 5) { BackColor = ConsoleColor.DarkYellow });
 
-var layer2 = new FrameLayer(50, 6, 35, 15)
+var layer2 = new Frame(50, 6, 35, 15)
 {
     BackColor = ConsoleColor.Blue,
     Palette = FramePalettes.DoubleLine,
@@ -22,7 +23,7 @@ Layers.RenderAll();
 
 await Task.Delay(1000);
 
-var layer3 = new FrameLayer(10, 10, 42, 12)
+var layer3 = new Frame(10, 10, 42, 12)
 {
     ForeColor = ConsoleColor.Black,
     BackColor = ConsoleColor.Green,
@@ -37,7 +38,7 @@ layer3.Visible = false;
 
 Layers.RenderAll();
 
-var layer4 = new FrameLayer(-4, -4, 10, 5)
+var layer4 = new Frame(-4, -4, 14, 7)
 {
     BackColor = ConsoleColor.DarkRed,
 };
@@ -58,6 +59,16 @@ for (int i = 0; i < 32; i++)
     await Task.Delay(50);
 }
 
+await Task.Delay(1000);
+
+for (int i = 0; i < 32; i++)
+{
+    layer1.GridX++;
+
+    Layers.RenderAll();
+
+    await Task.Delay(50);
+}
 
 Console.ReadKey(false);
 

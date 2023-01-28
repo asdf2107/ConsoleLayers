@@ -10,7 +10,6 @@ namespace ConsoleLayers.Core
         private static readonly List<Layer> _layers = new();
         internal static readonly int[,] ZMap = new int[Settings.Grid.Width, Settings.Grid.Height];
 
-        public static bool Changed { get; private set; } = false;
         public static int MaxZ => _layers.Any() ? _layers.Max(l => l.GridZ) : -1;
 
         public static Task StartLoop()
@@ -20,7 +19,7 @@ namespace ConsoleLayers.Core
 
         public static void RenderAll()
         {
-            if (Changed)
+            if (AnyLayerChanged())
                 RegenerateZMap();
 
             var locatedSymbols = new List<LocatedSymbol>();
@@ -38,11 +37,6 @@ namespace ConsoleLayers.Core
             ScreenDrawer.Draw(locatedSymbols);
         }
 
-        public static void SetChanged()
-        {
-            Changed = true;
-        }
-
         /// <summary>
         /// Adds layer to list of layers to render. If GridZ is default (0), the layer is added to the top with appropriate value set in GridZ.
         /// </summary>
@@ -54,7 +48,6 @@ namespace ConsoleLayers.Core
                     layer.GridZ = MaxZ + 1;
 
                 _layers.Add(layer);
-                SetChanged();
             }
         }
 
@@ -75,7 +68,7 @@ namespace ConsoleLayers.Core
         public static void Remove(Layer layer)
         {
             if (_layers.Remove(layer))
-                Changed = true;
+                RegenerateZMap();
         }
 
         internal static void RegenerateZMap()
@@ -98,7 +91,20 @@ namespace ConsoleLayers.Core
                 }
             }
 
-            Changed = false;
+            ResetChanged();
+        }
+
+        internal static bool AnyLayerChanged()
+        {
+            return _layers.Any(l => l.Changed);
+        }
+
+        private static void ResetChanged()
+        {
+            foreach (var layer in _layers)
+            {
+                layer.Changed = false;
+            }
         }
 
         public static int ClampHorizontal(int x)

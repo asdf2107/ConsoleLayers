@@ -2,21 +2,21 @@
 
 namespace ConsoleLayers.Core.ConcreteLayers
 {
-    public class FrameLayer : Layer
+    public class Frame : Layer
     {
         public ConsoleColor ForeColor { get; set; } = Settings.Colors.DefaultText;
         public ConsoleColor BackColor { get; set; } = Settings.Colors.DefaultBackground;
         public IFramePalette Palette { get; set; } = FramePalettes.SingleLine;
 
-        public FrameLayer()
+        public Frame()
         {
         }
 
-        public FrameLayer(int gridX, int gridY, int width, int height) : base(gridX, gridY, width, height)
+        public Frame(int gridX, int gridY, int width, int height) : base(gridX, gridY, width, height)
         {
         }
 
-        protected override Symbol GetSymbolAt(int x, int y)
+        protected override Symbol GetLayerSymbolAt(int x, int y)
         {
             char textChar = Symbol.EmptyChar;
 
