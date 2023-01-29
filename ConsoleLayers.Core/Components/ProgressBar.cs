@@ -1,14 +1,12 @@
 ﻿using ConsoleLayers.Core.Tools;
 using System;
 
-namespace ConsoleLayers.Core.ConcreteLayers
+namespace ConsoleLayers.Core.Components
 {
-    public class ProgressBar : Layer
+    public class ProgressBar : ComponentLayer
     {
         public ConsoleColor ProgressForeColor { get; set; } = Settings.Colors.DefaultText;
         public ConsoleColor ProgressBackColor { get; set; } = Settings.Colors.DefaultBackground;
-        public ConsoleColor LeftForeColor { get; set; } = Settings.Colors.DefaultText;
-        public ConsoleColor LeftBackColor { get; set; } = Settings.Colors.DefaultBackground;
         public char ProgressLoadingChar { get; set; } = '█';
         public char LeftLoadingChar { get; set; } = Symbol.EmptyChar;
         /// <summary>
@@ -31,8 +29,8 @@ namespace ConsoleLayers.Core.ConcreteLayers
             return x > roundValue ?
                 new Symbol
                 {
-                    ForeColor = LeftForeColor,
-                    BackColor = LeftBackColor,
+                    ForeColor = ForeColor,
+                    BackColor = BackColor,
                     Text = LeftLoadingChar.ToString(),
                 } :
                 new Symbol

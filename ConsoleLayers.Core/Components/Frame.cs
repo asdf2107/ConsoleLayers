@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace ConsoleLayers.Core.ConcreteLayers
+﻿namespace ConsoleLayers.Core.Components
 {
-    public class Frame : Layer
+    public class Frame : ComponentLayer
     {
-        public ConsoleColor ForeColor { get; set; } = Settings.Colors.DefaultText;
-        public ConsoleColor BackColor { get; set; } = Settings.Colors.DefaultBackground;
         public IFramePalette Palette { get; set; } = FramePalettes.SingleLine;
 
         public Frame()

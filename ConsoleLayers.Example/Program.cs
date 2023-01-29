@@ -1,5 +1,5 @@
 ﻿using ConsoleLayers.Core;
-using ConsoleLayers.Core.ConcreteLayers;
+using ConsoleLayers.Core.Components;
 using ConsoleLayers.Example.Layers;
 using System.Text;
 
@@ -56,7 +56,6 @@ Layers.Add(layer4, progressLayer);
 
 for (int i = 0; i < 30; i++)
 {
-    layer4.GridX++;
     layer4.GridY++;
 
     if (i / 5 % 2 == 0)

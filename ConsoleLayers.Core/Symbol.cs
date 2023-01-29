@@ -11,6 +11,13 @@ namespace ConsoleLayers.Core
         public static readonly string EmptyText = " ";
         public static readonly char EmptyChar = ' ';
 
+        public Symbol this[int index] => new()
+        {
+            ForeColor = ForeColor,
+            BackColor = BackColor,
+            Text = Text[index].ToString(),
+        };
+
         public static Symbol Empty => FromText(EmptyText);
 
         public static Symbol FromText(string text)
