@@ -48,12 +48,28 @@ namespace ConsoleLayers.Core
             }
         }
 
+        public void AddChildren(params Layer[] layers)
+        {
+            foreach (var layer in layers)
+            {
+                AddChild(layer);
+            }
+        }
+
         public void RemoveChild(Layer layer)
         {
             if (_innerGridChildren.Contains(layer))
             {
                 _innerGridChildren.Remove(layer);
                 layer.Parent = null;
+            }
+        }
+
+        public void RemoveChildren(params Layer[] layers)
+        {
+            foreach (var layer in layers)
+            {
+                RemoveChildren(layer);
             }
         }
 
@@ -114,7 +130,7 @@ namespace ConsoleLayers.Core
                 {
                     if (childLayer.GridX <= innerX && childLayer.GridY <= innerY &&
                         childLayer.GridX + childLayer.Width > innerX && childLayer.GridY + childLayer.Height > innerY)
-                        return childLayer.GetSymbolAt(innerX, innerY);
+                        return childLayer.GetSymbolAt(innerX - childLayer.GridX, innerY - childLayer.GridY);
                 }
             }
 

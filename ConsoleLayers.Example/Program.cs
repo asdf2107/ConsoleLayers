@@ -12,7 +12,7 @@ var drawLoopTask = Layers.StartLoop();
 var backgroundLayer = new BackgroundLayer();
 
 var layer1 = new Frame(2, 4, 20, 10);
-layer1.AddChild(new Frame(0, 0, 10, 5) { BackColor = ConsoleColor.DarkYellow });
+layer1.AddChild(new Frame(2, 2, 10, 5) { BackColor = ConsoleColor.DarkYellow });
 
 var layer2 = new Frame(50, 6, 35, 15)
 {
@@ -45,12 +45,18 @@ var layer4 = new Frame(-4, -4, 14, 7)
     BackColor = ConsoleColor.DarkRed,
 };
 
-var progressLayer = new Frame(0, Settings.Grid.Height - 3, Settings.Grid.Width - 1, 3);
-var progressBar = new ProgressBar(0, 0, Settings.Grid.Width - 3)
+var progressLayer = new Frame(0, Settings.Grid.Height - 4, Settings.Grid.Width, 4);
+
+var progressBar = new ProgressBar(0, 1, Settings.Grid.Width - 2)
 {
     LeftLoadingChar = '-',
 };
-progressLayer.AddChild(progressBar);
+
+var progressText = new Text((Settings.Grid.Width - 4) / 2 - 4, 0, 10, 1);
+
+progressText.Lines[0].Add(Symbol.FromText("Loading..."));
+
+progressLayer.AddChildren(progressBar, progressText);
 
 Layers.Add(layer4, progressLayer);
 
