@@ -19,12 +19,9 @@ namespace ConsoleLayers.Core
 
         public static void Draw(IEnumerable<LocatedSymbol> locatedSymbols)
         {
-            lock(_drawQueue)
+            foreach (var locatedSymbol in locatedSymbols)
             {
-                foreach (var locatedSymbol in locatedSymbols)
-                {
-                    _drawQueue.Enqueue(locatedSymbol);
-                }
+                _drawQueue.Enqueue(locatedSymbol);
             }
         }
 
@@ -39,45 +36,42 @@ namespace ConsoleLayers.Core
             {
                 if (!_drawQueue.IsEmpty)
                 {
-                    lock(_drawQueue)
+                    bool success = _drawQueue.TryDequeue(out LocatedSymbol first);
+                    if (!success)
+                        throw new Exception("Failed to dequeue locatedSymbol.");
+                    first.ThrowIfNotSingleLength();
+
+                    if (IsAlreadyDrawn(first))
+                        continue;
+                    else
+                        SetAsAlreadyDrawn(first);
+
+                    if (Settings.Optimization == Optimization.Merge)
                     {
-                        bool success = _drawQueue.TryDequeue(out LocatedSymbol first);
-                        if (!success)
-                            throw new Exception("Failed to dequeue locatedSymbol.");
-                        first.ThrowIfNotSingleLength();
-
-                        if (IsAlreadyDrawn(first))
-                            continue;
-                        else
-                            SetAsAlreadyDrawn(first);
-
-                        if (Settings.Optimization == Optimization.Merge)
+                        while (!_drawQueue.IsEmpty)
                         {
-                            while (!_drawQueue.IsEmpty)
+                            var next = _drawQueue.First();
+
+                            if (IsAlreadyDrawn(next))
+                                break;
+
+                            if (first.CanBeMergedWith(next))
                             {
-                                var next = _drawQueue.First();
+                                next.ThrowIfNotSingleLength();
+                                SetAsAlreadyDrawn(next);
 
-                                if (IsAlreadyDrawn(next))
-                                    break;
-
-                                if (first.CanBeMergedWith(next))
-                                {
-                                    next.ThrowIfNotSingleLength();
-                                    SetAsAlreadyDrawn(next);
-
-                                    first = first.MergeWith(next);
-                                    if (!_drawQueue.TryDequeue(out _))
-                                        throw new Exception("Failed to dequeue locatedSymbol.");
-                                }
-                                else
-                                {
-                                    break;
-                                }
+                                first = first.MergeWith(next);
+                                if (!_drawQueue.TryDequeue(out _))
+                                    throw new Exception("Failed to dequeue locatedSymbol.");
+                            }
+                            else
+                            {
+                                break;
                             }
                         }
-
-                        PerformDraw(first);
                     }
+
+                    PerformDraw(first);
                 }
             }
         }
@@ -101,7 +95,7 @@ namespace ConsoleLayers.Core
             if (Console.BackgroundColor != located.Symbol.BackColor)
                 Console.BackgroundColor = located.Symbol.BackColor;
 
-            if (Console.CursorLeft != located.GridX - 1 || Console.CursorTop != located.GridY)
+            if (Console.CursorLeft != located.GridX || Console.CursorTop != located.GridY)
                 Console.SetCursorPosition(located.GridX, located.GridY);
 
             Console.Write(located.Symbol.Text);
