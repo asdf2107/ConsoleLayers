@@ -108,8 +108,8 @@ namespace ConsoleLayers.Core
             }
         }
 
-        public static int ClampHorizontal(int x) => x.Clamp(0, Settings.Grid.Width);
+        internal static int ClampHorizontal(int x) => x.Clamp(0, Settings.Grid.Width);
 
-        public static int ClampVertical(int y) => y.Clamp(0, Settings.Grid.Height);
+        internal static int ClampVertical(int y) => y.Clamp(0, Settings.Grid.Height);
     }
 }
