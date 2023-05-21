@@ -13,12 +13,12 @@ namespace ConsoleLayers.Core
         private int _height = Settings.Grid.Height;
         private bool _visible = true;
         private List<Layer> _innerGridChildren = new();
-        public int GridX { get => _gridX; set { _gridX = value; Changed = true; } }
-        public int GridY { get => _gridY; set { _gridY = value; Changed = true; } }
-        public int GridZ { get => _gridZ; set { _gridZ = value; Changed = true; } }
-        public int Width { get => _width; set { _width = value; Changed = true; } }
-        public int Height { get => _height; set { _height = value; Changed = true; } }
-        public bool Visible { get => _visible; set { _visible = value; Changed = true; } }
+        public int GridX { get => _gridX; set { var oldValue = _gridX; _gridX = value; if (oldValue != value) Changed = true; } }
+        public int GridY { get => _gridY; set { var oldValue = _gridY; _gridY = value; if (oldValue != value) Changed = true; } }
+        public int GridZ { get => _gridZ; set { var oldValue = _gridZ; _gridZ = value; if (oldValue != value) Changed = true; } }
+        public int Width { get => _width; set { var oldValue = _width; _width = value; if (oldValue != value) Changed = true; } }
+        public int Height { get => _height; set { var oldValue = _height; _height = value; if (oldValue != value) Changed = true; } }
+        public bool Visible { get => _visible; set { var oldValue = _visible; _visible = value; if (oldValue != value) Changed = true; } }
         internal bool Changed { get; set; } = true;
         public int InnerGridLeft { get; set; } = 1;
         public int InnerGridRight { get; set; } = 1;
