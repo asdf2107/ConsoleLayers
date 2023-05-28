@@ -24,6 +24,8 @@ namespace ConsoleLayers.Core
         public int InnerGridRight { get; set; } = 1;
         public int InnerGridTop { get; set; } = 1;
         public int InnerGridBottom { get; set; } = 1;
+        public int InnerGridWidth => Width - (InnerGridLeft + InnerGridRight);
+        public int InnerGridHeight => Height - (InnerGridTop + InnerGridBottom);
         public ReadOnlyCollection<Layer> InnerGridChildren => _innerGridChildren.AsReadOnly();
         public Layer Parent { get; private set; }
 
