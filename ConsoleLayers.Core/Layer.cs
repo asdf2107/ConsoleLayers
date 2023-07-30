@@ -71,8 +71,18 @@ namespace ConsoleLayers.Core
         {
             foreach (var layer in layers)
             {
-                RemoveChildren(layer);
+                RemoveChild(layer);
             }
+        }
+
+        public void RemoveAllChildren()
+        {
+            foreach (var layer in _innerGridChildren)
+            {
+                layer.Parent = null;
+            }
+
+            _innerGridChildren.Clear();
         }
 
         public void Render()
