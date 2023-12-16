@@ -1,10 +1,10 @@
 ﻿using ConsoleLayers.Core;
 using ConsoleLayers.Core.Components;
+using ConsoleLayers.Core.Tools;
 using ConsoleLayers.Example.Layers;
 using System.Text;
 
 Console.CursorVisible = false;
-Console.OutputEncoding = Encoding.Unicode;
 //Settings.Optimization = Optimization.DoNotMerge;
 
 var drawLoopTask = Layers.StartLoop();
@@ -84,6 +84,11 @@ for (int i = 0; i < 70; i++)
 
     Layers.RenderAll();
     await Task.Delay(50);
+}
+
+if (PlatformHelper.IsWindows)
+{
+    Console.Beep();
 }
 
 Console.ReadKey(false);
