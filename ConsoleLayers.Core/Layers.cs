@@ -15,6 +15,7 @@ namespace ConsoleLayers.Core
 
         public static Task StartLoop()
         {
+            Console.Clear();
             return ScreenDrawer.StartDrawLoop();
         }
 

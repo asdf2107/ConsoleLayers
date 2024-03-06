@@ -20,12 +20,6 @@ namespace ConsoleLayers.Core
         public int Height { get => _height; set { var oldValue = _height; _height = value; if (oldValue != value) Changed = true; } }
         public bool Visible { get => _visible; set { var oldValue = _visible; _visible = value; if (oldValue != value) Changed = true; } }
         internal bool Changed { get; set; } = true;
-        public int InnerGridLeft { get; set; } = 1;
-        public int InnerGridRight { get; set; } = 1;
-        public int InnerGridTop { get; set; } = 1;
-        public int InnerGridBottom { get; set; } = 1;
-        public int InnerGridWidth => Width - (InnerGridLeft + InnerGridRight);
-        public int InnerGridHeight => Height - (InnerGridTop + InnerGridBottom);
         public ReadOnlyCollection<Layer> InnerGridChildren => _innerGridChildren.AsReadOnly();
         public Layer Parent { get; private set; }
 
@@ -132,17 +126,13 @@ namespace ConsoleLayers.Core
 
         private Symbol GetSymbolAt(int x, int y)
         {
-            if (_innerGridChildren.Any() &&
-                x >= InnerGridLeft && x < Width - InnerGridRight &&
-                y >= InnerGridTop && y < Height - InnerGridBottom)
+            if (_innerGridChildren.Any())
             {
-                int innerX = x - InnerGridLeft;
-                int innerY = y - InnerGridTop;
                 foreach (var childLayer in _innerGridChildren.OrderByDescending(cl => cl.GridZ))
                 {
-                    if (childLayer.GridX <= innerX && childLayer.GridY <= innerY &&
-                        childLayer.GridX + childLayer.Width > innerX && childLayer.GridY + childLayer.Height > innerY)
-                        return childLayer.GetSymbolAt(innerX - childLayer.GridX, innerY - childLayer.GridY);
+                    if (childLayer.GridX <= x && childLayer.GridY <= y &&
+                        childLayer.GridX + childLayer.Width > x && childLayer.GridY + childLayer.Height > y)
+                        return childLayer.GetSymbolAt(x - childLayer.GridX, y - childLayer.GridY);
                 }
             }
 
